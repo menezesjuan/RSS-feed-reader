@@ -1,0 +1,53 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createApp } from '../../server/app.js';
+
+test('API Routes: GET /api/health returns status ok', async (t) => {
+  const app = createApp();
+  const server = app.listen(0);
+  t.after(() => server.close());
+
+  const port = server.address().port;
+  const res = await fetch(`http://127.0.0.1:${port}/api/health`);
+  assert.equal(res.status, 200);
+
+  const json = await res.json();
+  assert.equal(json.status, 'ok');
+  assert.ok(json.timestamp);
+});
+
+test('API Routes: GET /api/feeds/sample returns curated sample categories', async (t) => {
+  const app = createApp();
+  const server = app.listen(0);
+  t.after(() => server.close());
+
+  const port = server.address().port;
+  const res = await fetch(`http://127.0.0.1:${port}/api/feeds/sample`);
+  assert.equal(res.status, 200);
+
+  const json = await res.json();
+  assert.ok(Array.isArray(json.categories));
+  assert.ok(json.categories.length >= 5);
+  
+  // Verify Frontend category
+  const frontend = json.categories.find(c => c.name === 'Frontend');
+  assert.ok(frontend);
+  assert.ok(frontend.feeds.length > 0);
+});
+
+test('API Routes: POST /api/feeds/validate validates empty or invalid URLs', async (t) => {
+  const app = createApp();
+  const server = app.listen(0);
+  t.after(() => server.close());
+
+  const port = server.address().port;
+  const res = await fetch(`http://127.0.0.1:${port}/api/feeds/validate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: '' })
+  });
+
+  assert.equal(res.status, 400);
+  const json = await res.json();
+  assert.equal(json.valid, false);
+});
