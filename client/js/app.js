@@ -6,6 +6,8 @@ import { createDigestView } from './components/DigestView.js';
 import { createDiscoverView } from './components/DiscoverView.js';
 import { createArticleReader } from './components/ArticleReader.js';
 import { createAddFeedModal } from './components/AddFeedModal.js';
+import { createKeyboardShortcutsModal } from './components/KeyboardShortcutsModal.js';
+import { createAuthModal } from './components/AuthModal.js';
 import { generateCuratedDashboardItems } from './seedData.js';
 
 async function initApp() {
@@ -22,6 +24,8 @@ async function initApp() {
   const discoverView = createDiscoverView(store);
   const articleReader = createArticleReader(store);
   const addFeedModal = createAddFeedModal(store);
+  const keyboardShortcutsModal = createKeyboardShortcutsModal();
+  const authModal = createAuthModal(store);
 
   const mainLayout = document.createElement('div');
   mainLayout.className = 'flex flex-1 overflow-hidden relative';
@@ -34,6 +38,8 @@ async function initApp() {
   root.appendChild(mainLayout);
   root.appendChild(articleReader);
   root.appendChild(addFeedModal);
+  root.appendChild(keyboardShortcutsModal);
+  root.appendChild(authModal);
 
   // Hook up Add Feed button in header to modal
   header.querySelector('#add-feed-btn')?.addEventListener('click', () => {

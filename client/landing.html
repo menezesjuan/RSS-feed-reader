@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontpage — Your personalized front page for tech content</title>
+  <meta name="description" content="Build your clean, calm RSS feed dashboard. Organize feeds across frontend, backend, design and AI.">
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'%3E%3Crect width='24' height='24' rx='6' fill='%232563eb'/%3E%3Cpath fill='%23fff' d='M6 6h12v3H6zm0 5h12v3H6zm0 5h7v3H6z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/output.css">
+</head>
+<body class="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] antialiased min-h-screen flex flex-col justify-between selection:bg-[var(--color-accent-subtle)]">
+  <!-- Top Navigation -->
+  <header class="h-16 border-b border-[var(--color-border-subtle)] px-6 sm:px-12 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2.5 font-bold text-lg tracking-tight">
+      <div class="w-8 h-8 rounded-lg bg-[var(--color-accent)] flex items-center justify-center text-white shadow-sm">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4 11a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2zM4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5zM4 17a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2z"/>
+        </svg>
+      </div>
+      <span>Frontpage</span>
+    </a>
+
+    <div class="flex items-center gap-3 text-xs font-semibold">
+      <a href="/" class="px-4 py-2 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] transition-colors">
+        Try as Guest
+      </a>
+      <a href="/" class="px-4 py-2 rounded-lg bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white shadow-xs transition-colors">
+        Open Dashboard
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-6 py-16 sm:py-24 max-w-4xl mx-auto space-y-8">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-xs font-medium text-[var(--color-accent)]">
+      <span class="w-2 h-2 rounded-full bg-[var(--color-accent)]"></span>
+      <span>No algorithms. No engagement traps. Just your feeds.</span>
+    </div>
+
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-[var(--color-text-primary)] leading-[1.1]">
+      Your personalized front page for tech content.
+    </h1>
+
+    <p class="text-base sm:text-xl text-[var(--color-text-secondary)] max-w-2xl leading-relaxed">
+      A calm, customizable aggregator pulling RSS and Atom feeds into a high-density, beautifully organized reading interface.
+    </p>
+
+    <!-- Dual CTAs -->
+    <div class="flex flex-col sm:flex-row items-center gap-4 pt-2 w-full sm:w-auto">
+      <a href="/" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white font-semibold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+        <span>Try as Guest (Instant Access)</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+      <a href="/" class="w-full sm:w-auto px-8 py-3.5 rounded-xl border border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] font-semibold text-sm transition-all flex items-center justify-center">
+        <span>Sign Up / Sign In</span>
+      </a>
+    </div>
+
+    <p class="text-xs text-[var(--color-text-tertiary)] pt-1">
+      Pre-loaded with 19 curated feeds across Frontend, Design, Backend, and AI. No credit card required.
+    </p>
+
+    <!-- 3 Feature Highlights -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left pt-16 w-full">
+      <div class="p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 text-[var(--color-accent)] flex items-center justify-center">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        </div>
+        <h3 class="text-base font-bold text-[var(--color-text-primary)]">Three Tailored Layouts</h3>
+        <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+          Switch effortlessly between Compact List, Visual Cards Grid, and Standard Magazine view to fit your reading style.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        </div>
+        <h3 class="text-base font-bold text-[var(--color-text-primary)]">Daily Digest & Discovery</h3>
+        <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+          Get a calm daily briefing of what you missed without scrolling through endless chronological lists.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-green-50 text-[var(--color-success)] flex items-center justify-center">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        </div>
+        <h3 class="text-base font-bold text-[var(--color-text-primary)]">OPML Standard Import</h3>
+        <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+          Bring your existing feeds from Feedly, Inoreader, or NetNewsWire in seconds with resilient OPML 2.0 import/export.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[var(--color-border-subtle)] py-6 text-center text-xs text-[var(--color-text-tertiary)]">
+    Frontpage — A modern RSS & Atom feed reader built for speed, calm, and information density.
+  </footer>
+</body>
+</html>

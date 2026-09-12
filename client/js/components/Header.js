@@ -87,5 +87,13 @@ export function createHeader(store) {
     });
   });
 
+  // User avatar opens auth modal
+  const avatar = header.querySelector('.rounded-full');
+  if (avatar) {
+    avatar.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('frontpage:open-auth'));
+    });
+  }
+
   return header;
 }

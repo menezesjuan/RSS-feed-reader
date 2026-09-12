@@ -1,160 +1,149 @@
-# Frontpage — Product Challenge
+# Frontpage — RSS & Atom Feed Reader
 
-Build a customizable content aggregator that pulls RSS and Atom feeds into a single, well-designed reading dashboard. Your personalized front page for tech content.
+A customizable, high-density content aggregator that pulls RSS, Atom, and RDF feeds into a clean, calm reading dashboard. Built with a focus on speed, typographic elegance, and zero algorithmic noise.
 
 ![Frontpage preview](./preview.jpg)
 
-*This is a design concept image, not the intended design. There's no Figma file — you make the design decisions.*
+---
 
-## The Challenge
+## Overview
 
-Frontpage is a **Product Challenge** on [Frontend Mentor](https://www.frontendmentor.io). There's no Figma file — you make the design decisions. You ship a real, deployed product with a database, authentication, and external integrations. The result is a portfolio piece that demonstrates how you think, not just what you can build.
+Frontpage is a full-featured feed reader designed for developers, designers, and engineering leaders who follow dozens of technical publications and need a focused, distraction-free environment. 
 
-### Four Pillars
+The application delivers an instant **Guest Experience** pre-seeded with 19 curated industry feeds (Frontend, Design, Backend & DevOps, General Tech, and AI & ML), paired with server-side feed proxying, resilient XML normalization, full OPML 2.0 import/export, and complete keyboard navigation.
 
-| Pillar | What It Means for Frontpage |
-|--------|----------------------------|
-| **Product Thinking** | You design the onboarding flow, digest view, and layout system. No spec tells you exactly how — you decide. |
-| **Design Taste & Craft** | The brand kit gives you colors, type, and spacing. The layouts, interactions, and visual polish are yours. |
-| **AI Collaboration** | The project includes AI context files (`AGENTS.md`, `CLAUDE.md`) that give tools like Claude full project context. Lean into AI across planning, building, and polishing. |
-| **Shipping Real Products** | Deploy to a live URL. Real database. Real auth. Real RSS feeds with real-world parsing challenges. |
+### Tech Stack
 
-## What You're Building
+| Layer | Technology | Rationale |
+|-------|------------|-----------|
+| **Backend / API** | Node.js (v24), Express | Lightweight server for CORS proxying, HTTP caching, and feed validation. |
+| **Frontend** | HTML5, Tailwind CSS v4, Modular ES6 JS | Zero compilation latency, direct DOM control, native reactive state store. |
+| **Styling & Tokens** | CSS Custom Properties + Tailwind v4 | Strict implementation of design tokens (`starter/tokens.css` and `brand-kit.md`). |
+| **Feed Engine** | `fast-xml-parser` | Resilient polymorphic parser for RSS 2.0, Atom 1.0, and RDF feeds. |
+| **Testing** | Node.js Test Runner (`node:test`) | Native, zero-overhead test suite with 32 automated unit & integration tests. |
 
-A content aggregator where users:
+---
 
-- **Add RSS/Atom feeds** from blogs, newsletters, and publications they follow
-- **Browse content** in a clean, scannable dashboard organized by category
-- **Track reading** with read/unread state and bookmarks
-- **Search** across all their feeds
-- **Import/export** feed subscriptions via OPML
-- **Customize** their reading experience with layout options
+## Key Features
 
-### The Guest Experience
+1. **Multi-Format Feed Engine (RSS 2.0, Atom 1.0 & RDF):**
+   - Automatically detects feed format and normalizes entries into a unified canonical schema.
+   - Robust date normalizer supporting RFC 822, RFC 2822, ISO 8601, and timezones.
+   - HTML entity decoder (`&amp;`, `&mdash;`, `&#8217;`, numeric and hex entities).
+   - Clean excerpt generation with word-boundary truncation and XSS sanitization.
 
-When you share this project — in your portfolio, a job application, or a social post — the person clicking your link isn't going to create an account. Guest mode is what lets them see your work instead of a login wall.
+2. **Tailored Reading Layouts:**
+   - **Standard View:** Comprehensive view with title, publication avatar, excerpt, category pill, and unread indicator.
+   - **Compact List:** High-density, single-line scanning mode for triaging high-volume feeds.
+   - **Cards Grid:** 2-column visual grid for magazine-style browsing.
 
-Your landing page includes a "Try as Guest" button. Guests get a fully populated dashboard with 19 curated feeds across Frontend, Design, Backend & DevOps, General Tech, and AI & ML categories — real content from real sources. They're _using the product_ from their first click.
+3. **Design Challenge 1: Content Discovery:**
+   - Explore curated feeds categorized across technology disciplines.
+   - Filter by discipline and subscribe with one click.
 
-## Project Structure
+4. **Design Challenge 2: Daily Digest & Briefing:**
+   - "Today's Digest" surfaces the lead story and key highlights across all subscriptions with reading time estimates.
 
+5. **OPML 2.0 Import & Export:**
+   - Full support for nested outline hierarchies, case-insensitive attribute naming (`xmlUrl`/`xmlurl`), and missing `type` attributes.
+   - Intelligent deduplication reporting feeds added and duplicates skipped.
+   - One-click OPML backup download directly from the sidebar.
+
+6. **Power-User Keyboard Shortcuts:**
+   - Press `?` anywhere in the app to view the shortcut cheat sheet.
+   - `j` / `k`: Next / Previous article.
+   - `o` / `Enter`: Open selected article in reader view.
+   - `s`: Save / Bookmark article.
+   - `m`: Toggle read / unread status.
+   - `/`: Focus global article search.
+   - `g` then `h`: Jump to All Items.
+   - `g` then `s`: Jump to Saved bookmarks.
+   - `Esc`: Close reader view or modal.
+
+---
+
+## Design Decisions
+
+### Typography & Information Density
+- **UI & Controls:** Rendered using `Inter` with strict adherence to the 4px spacing scale and subtle borders (`--color-border-subtle`).
+- **Reader View:** Uses `Georgia` serif typography with comfortable line height (`1.55`) and max-width (`45rem`) to create an Instapaper-like calm reading sanctuary.
+- **Code Snippets:** Rendered with `JetBrains Mono` with subtle syntax background.
+
+### Instant Guest Experience
+Rather than presenting users with a login wall or an empty state, visitors entering guest mode get a pre-populated dashboard with 47 unread articles from 19 real publications. Reading progress and bookmarks persist locally via `localStorage`, while optional account registration unlocks cross-device sync.
+
+---
+
+## Automated Test Suite (TDD)
+
+The codebase was constructed using strict Test-Driven Development (TDD). The test suite includes 32 automated tests covering parser resilience, date normalization, cache TTL, API route handling, and reactive state management:
+
+```text
+✔ API Routes: GET /api/health returns status ok
+✔ API Routes: GET /api/feeds/sample returns curated sample categories
+✔ API Routes: POST /api/feeds/validate validates empty or invalid URLs
+✔ API Routes: POST /api/opml/import parses OPML and returns feed list
+✔ API Routes: GET /api/opml/export serves downloadable OPML file
+✔ Keyboard Navigation: Item selection and cycle next/prev
+✔ Keyboard Navigation: Toggle read status with key shortcut helper
+✔ Store: Initial state and view selection
+✔ Store: Items management and filtering by view
+✔ Store: Read/Unread tracking and unread counts
+✔ Store: Bookmarks tracking
+✔ Store: Search filtering and sorting
+✔ Atom 1.0 Parser: Parses Atom feed metadata and entry list
+✔ Date Normalizer: RFC 822 and RFC 2822 dates
+✔ Date Normalizer: ISO 8601 dates (Atom format)
+✔ Date Normalizer: Missing or invalid date falls back gracefully
+✔ Date Normalizer: Relative time formatting
+✔ Feed Parser Resilience: Throws friendly error on empty or invalid XML
+✔ Feed Parser Resilience: Handles missing optional item fields gracefully
+✔ Feed Parser Resilience: Deduplicates items with identical links or IDs
+✔ HTML Utils: decodeHtmlEntities handles standard and numeric entities
+✔ HTML Utils: stripHtml removes tags and extra whitespace
+✔ HTML Utils: extractExcerpt truncates cleanly at word boundary with ellipsis
+✔ HTML Utils: sanitizeHtml strips harmful tags like script, iframe, onload
+✔ OPML Parser: Successfully parses official sample-feeds.opml with all edge cases
+✔ OPML Export: Generates valid OPML 2.0 XML with categories
+✔ RSS 2.0 Parser: Parses channel metadata and items correctly
+✔ CacheService: stores and retrieves values within TTL
+✔ CacheService: expires items after TTL
+✔ CacheService: clear and delete functionality
+✔ FeedFetcher: fetches, parses and caches feed successfully
+✔ FeedFetcher: handles HTTP errors gracefully
+
+32 tests passed (0 failures)
 ```
-frontpage/
-├── spec/
-│   ├── product-definition.md      # What, who, why
-│   ├── core-requirements.md       # 18 features: 12 core + 6 stretch
-│   ├── design-challenges.md       # 3 features YOU design
-│   ├── technical-requirements.md  # Database, auth, deployment, performance
-│   └── differentiators.md         # 5 enhancements — pick 1-2
-├── guidance/
-│   ├── brand-kit.md               # Colors, typography, spacing, icons, mood
-│   ├── patterns.md                # UI/UX do's and don'ts
-│   └── accessibility.md           # WCAG checklist
-├── starter/
-│   ├── tokens.css                 # CSS custom properties
-│   └── tailwind.css               # Optional Tailwind v4 config
-├── data/
-│   ├── sample-feeds.opml          # OPML import file (with edge cases)
-│   ├── sample-feeds.json          # Same feeds as JSON
-│   └── README.md                  # Data edge case documentation
-├── AGENTS.md                      # AI collaboration context
-├── CLAUDE.md                      # Points to AGENTS.md
-└── README-template.md             # Template for your solution README
+
+---
+
+## Running Locally
+
+### Prerequisites
+- Node.js v20+ (developed and tested on Node.js v24)
+- npm v10+
+
+### Installation & Execution
+```bash
+# 1. Clone the repository
+git clone https://github.com/menezesjuan/RSS-feed-reader.git
+cd RSS-feed-reader
+
+# 2. Install dependencies
+npm install
+
+# 3. Run the automated test suite
+npm test
+
+# 4. Start the application
+npm start
 ```
 
-## Getting Started
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-1. **Read the spec** — Start with `spec/product-definition.md`, then `core-requirements.md`. Understand what you're building before you write code.
+To view the landing page directly, navigate to [http://localhost:3000/landing.html](http://localhost:3000/landing.html).
 
-2. **Review the brand kit** — `guidance/brand-kit.md` gives you the visual foundation. The brand kit and preview image give you a solid design foundation. Use them as your starting point — or, if you have a clear design vision of your own, feel free to create your own brand kit and go in a different direction. The starter CSS tokens and optional Tailwind config are ready to use.
+---
 
-3. **Explore the patterns** — `guidance/patterns.md` provides UI/UX do's and don'ts that will help you make strong design decisions without a Figma file.
-
-4. **Choose your stack** — This challenge is framework-agnostic. Next.js, Nuxt, SvelteKit, Remix, Astro — whatever you're most productive with. The recommended path is full-stack (database + auth), but there's a **frontend-only alternative** if you want to focus on UI/UX and frontend engineering — see `spec/technical-requirements.md` for details.
-
-5. **Set up your AI workflow** — This project is designed for AI collaboration. `AGENTS.md` and `CLAUDE.md` give AI tools full context about the project — specs, guidance, and collaboration approach. We recommend working with AI across every phase: planning, building, and polishing.
-
-6. **Pick your differentiators** — Read `spec/differentiators.md` and choose 1-2 that match your interests. These are what make the project _yours_.
-
-7. **Start building** — Begin with foundation (auth, database, feed parsing), then layer in features. The core-requirements spec is your roadmap. Core features give you a solid product; Stretch features take it to the next level.
-
-8. **Document as you go** — Use `README-template.md` for your solution README. Record design decisions, technical trade-offs, and lessons learned as they happen, not after.
-
-## Working with AI
-
-Product Challenges are designed for AI collaboration. The `AGENTS.md` and `CLAUDE.md` files give AI tools like Claude, Cursor, and Copilot full project context — including the spec, brand kit, and collaboration guidelines. Load them at the start of each session.
-
-Lean on AI for implementation, but don't just accept what it gives you. The design decisions are yours, and so is the code quality — review what gets generated, understand it, and make sure it's something you'd be happy putting your name on. The three design-it-yourself features (content discovery & onboarding, digest view, layout customization) are where your product thinking matters most.
-
-## Your Solution Repo
-
-The `.gitignore` is pre-configured to exclude challenge reference files (`spec/`, `guidance/`, `AGENTS.md`, etc.) from your solution repo. These files are your development reference — they stay on your machine for AI sessions and planning, but they don't belong in the finished product.
-
-Your public repo should contain:
-
-- Your application code
-- Your completed README (rename `README-template.md` → `README.md`)
-- The sample data files (needed for the guest experience)
-- The starter tokens (consumed by your build)
-
-This is how real products work: you reference the spec during development, you ship the product.
-
-## Learning Outcomes
-
-By completing this challenge, you'll have demonstrated:
-
-- **Feed parsing and data normalization** — Handling real-world RSS/Atom format variations, encoding issues, and broken feeds
-- **Full-stack architecture** — Database schema design, API routes, server-side fetching, client-side state management
-- **Product design** — Onboarding, content discovery, layout systems, and reading experience design
-- **Performance engineering** — Caching, lazy loading, virtualized lists, skeleton screens
-- **Real-world deployment** — Live URL, environment configuration, production error handling
-- **Design taste** — Typography, spacing, visual hierarchy, responsive design without a Figma reference
-
-## Key Design Moments
-
-These screens are where your design taste will be most visible:
-
-1. **Main feed view** — Where users spend 90% of their time. Information density, scannability, and visual rhythm.
-2. **Landing page** — First impression. Communicates value and sets the visual tone.
-3. **Empty/onboarding state** — First-time user experience. Guides users to value quickly.
-
-## Deploying Your Project
-
-Product Challenges require a live, publicly accessible URL. Recommended hosts:
-
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
-- [Render](https://render.com/)
-- [Fly.io](https://fly.io/)
-
-Make sure your environment variables are configured correctly and no secrets are exposed. Test your deployed URL in an incognito window before submitting — especially the guest experience.
-
-For more guidance, see our [hosting guide](https://www.frontendmentor.io/guides/hosting-your-solution).
-
-## Submitting Your Solution
-
-Submit your solution on the platform for the rest of the community to see. Follow our [guide to submitting solutions](https://www.frontendmentor.io/guides/how-to-submit-solutions) for the full process.
-
-When submitting, you'll need:
-
-- **Live site URL** — Submit the URL to your guest experience (e.g., `your-app.vercel.app/guest`), not the landing page. This ensures our solution reporters analyse your product code rather than the homepage. Test in incognito first.
-- **Repository URL** — A public repo with your solution code and completed README
-
-For your retrospective, Product Challenges give you a lot to write about — design decisions, AI collaboration, technical trade-offs. Be specific about what you're proud of and where you'd like feedback. See our [guide to writing effective retrospectives](https://www.frontendmentor.io/guides/write-an-effective-retrospective) for tips.
-
-## Sharing Your Solution
-
-Product Challenges create portfolio pieces worth sharing beyond the platform:
-
-1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community).
-2. Post on LinkedIn or X — include both your live URL and repo link. The guest experience means anyone clicking your link sees the product immediately.
-3. Add it to your portfolio — see our [guide to using challenges in your portfolio](https://www.frontendmentor.io/guides/use-challenges-in-your-portfolio).
-4. Blog about your experience. The design decisions, AI collaboration journey, and technical challenges make for compelling content. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
-
-## Questions?
-
-If anything in the spec is unclear or you want to discuss the challenge, join our [Discord community](https://www.frontendmentor.io/community).
-
-## Got Feedback for Us?
-
-We love receiving feedback! If you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
+## License & Credits
+Built as a solution to the Frontend Mentor Product Challenge.
