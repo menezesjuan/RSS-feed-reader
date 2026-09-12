@@ -21,7 +21,7 @@ export function createKeyboardShortcutsModal() {
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-[var(--color-text-secondary)]">Next / Previous article</span>
-              <div class="flex gap-1"><kbd class="px-2 py-0.5 border border-[var(--color-border)] rounded font-mono bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">j</kbd><kbd class="px-2 py-0.5 border border-[var(--color-border)] rounded font-mono bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">k</kbd></div>
+              <div class="flex gap-1"><kbd class="px-2 py-0.5 border border-[var(--color-border)] rounded font-mono bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">↓</kbd><kbd class="px-2 py-0.5 border border-[var(--color-border)] rounded font-mono bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)]">↑</kbd></div>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-[var(--color-text-secondary)]">Open selected article</span>

@@ -68,7 +68,7 @@ async function initApp() {
   const initialItems = generateCuratedDashboardItems();
   store.setItems(initialItems);
 
-  // Keyboard compound shortcuts (g h -> home/all, g s -> saved)
+  // Keyboard compound shortcuts (g h -> home/all, g s -> saved) and Arrow navigation
   let lastKey = '';
   let keyTimeout = null;
 
@@ -91,11 +91,40 @@ async function initApp() {
       lastKey = '';
     } else if (e.key === 'm') {
       // Toggle read on selected
-      const items = store.getFilteredItems();
-      if (items.length > 0) {
-        const first = items[0];
-        if (store.isRead(first.id)) store.markAsUnread(first.id);
-        else store.markAsRead(first.id);
+      const activeFocused = document.activeElement?.closest('.feed-item');
+      const targetId = activeFocused?.dataset.id;
+      if (targetId) {
+        if (store.isRead(targetId)) store.markAsUnread(targetId);
+        else store.markAsRead(targetId);
+      } else {
+        const items = store.getFilteredItems();
+        if (items.length > 0) {
+          const first = items[0];
+          if (store.isRead(first.id)) store.markAsUnread(first.id);
+          else store.markAsRead(first.id);
+        }
+      }
+    } else if (!store.state.activeArticleId) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        const feedItems = Array.from(document.querySelectorAll('.feed-item'));
+        if (feedItems.length > 0) {
+          e.preventDefault();
+          const currentIndex = feedItems.findIndex(el => el === document.activeElement || el.contains(document.activeElement));
+          let nextIndex;
+          if (e.key === 'ArrowDown') {
+            nextIndex = (currentIndex >= 0 && currentIndex < feedItems.length - 1) ? currentIndex + 1 : (currentIndex === -1 ? 0 : currentIndex);
+          } else {
+            nextIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+          }
+          feedItems[nextIndex]?.focus();
+          feedItems[nextIndex]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      } else if (e.key === 'o') {
+        const activeItem = document.activeElement?.closest('.feed-item');
+        if (activeItem?.dataset?.id) {
+          e.preventDefault();
+          store.setActiveArticle(activeItem.dataset.id);
+        }
       }
     }
   });

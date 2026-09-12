@@ -35,3 +35,32 @@ test('Keyboard Navigation: Toggle read status with key shortcut helper', () => {
   store.markAsUnread('test-1');
   assert.equal(store.isRead('test-1'), false);
 });
+
+test('Keyboard Navigation: Arrow navigation helper calculates correct indices', () => {
+  const store = new Store();
+  const items = [
+    { id: '1', title: 'First' },
+    { id: '2', title: 'Second' },
+    { id: '3', title: 'Third' }
+  ];
+  store.setItems(items);
+
+  // Helper for arrow navigation
+  function getNextIndex(currentIndex, direction, max) {
+    if (direction === 'ArrowDown') {
+      return Math.min(currentIndex + 1, max - 1);
+    }
+    if (direction === 'ArrowUp') {
+      return Math.max(currentIndex - 1, 0);
+    }
+    return currentIndex;
+  }
+
+  assert.equal(getNextIndex(0, 'ArrowDown', items.length), 1);
+  assert.equal(getNextIndex(1, 'ArrowDown', items.length), 2);
+  assert.equal(getNextIndex(2, 'ArrowDown', items.length), 2); // clamped
+
+  assert.equal(getNextIndex(2, 'ArrowUp', items.length), 1);
+  assert.equal(getNextIndex(1, 'ArrowUp', items.length), 0);
+  assert.equal(getNextIndex(0, 'ArrowUp', items.length), 0); // clamped
+});

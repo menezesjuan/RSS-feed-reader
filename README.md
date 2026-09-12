@@ -49,9 +49,9 @@ The application delivers an instant **Guest Experience** pre-seeded with 19 cura
    - Intelligent deduplication reporting feeds added and duplicates skipped.
    - One-click OPML backup download directly from the sidebar.
 
-6. **Power-User Keyboard Shortcuts:**
+6. **Power-User Keyboard Shortcuts & Accessibility:**
    - Press `?` anywhere in the app to view the shortcut cheat sheet.
-   - `j` / `k`: Next / Previous article.
+   - `↓` / `↑` (ArrowDown / ArrowUp): Navigate seamlessly across feed items in list view and previous/next articles in reader view.
    - `o` / `Enter`: Open selected article in reader view.
    - `s`: Save / Bookmark article.
    - `m`: Toggle read / unread status.
@@ -59,6 +59,15 @@ The application delivers an instant **Guest Experience** pre-seeded with 19 cura
    - `g` then `h`: Jump to All Items.
    - `g` then `s`: Jump to Saved bookmarks.
    - `Esc`: Close reader view or modal.
+
+7. **Surgical DOM Updates & State Reactivity:**
+   - Fine-grained DOM mutation listener that updates individual article states (unread dots, opacities, bookmark status, and sidebar counters) in place.
+   - Preserves user scroll position and active keyboard focus during real-time updates without full list re-renders.
+
+8. **Hardened XSS Protection & WCAG AA Contrast:**
+   - Dedicated client-side string escaping utility (`escapeHtml`) systematically applied to all external RSS data (`title`, `excerpt`, `category`, `feedTitle`, `author`).
+   - Calibrated text contrast (`--color-text-tertiary: #6b7280` on light mode, `#9ca3af` on dark mode) ensuring strict WCAG AA standard compliance (>= 4.5:1).
+   - Dynamic CSS variable linkage with `--color-unread-indicator`.
 
 ---
 
@@ -76,7 +85,7 @@ Rather than presenting users with a login wall or an empty state, visitors enter
 
 ## Automated Test Suite (TDD)
 
-The codebase was constructed using strict Test-Driven Development (TDD). The test suite includes 32 automated tests covering parser resilience, date normalization, cache TTL, API route handling, and reactive state management:
+The codebase was constructed using strict Test-Driven Development (TDD). The test suite includes 35 automated tests covering parser resilience, date normalization, cache TTL, API route handling, escaping utilities, and keyboard navigation:
 
 ```text
 ✔ API Routes: GET /api/health returns status ok
@@ -84,8 +93,11 @@ The codebase was constructed using strict Test-Driven Development (TDD). The tes
 ✔ API Routes: POST /api/feeds/validate validates empty or invalid URLs
 ✔ API Routes: POST /api/opml/import parses OPML and returns feed list
 ✔ API Routes: GET /api/opml/export serves downloadable OPML file
+✔ escapeHtml: Escapes &, <, >, ", and ' characters correctly
+✔ escapeHtml: Handles null, undefined and numbers gracefully
 ✔ Keyboard Navigation: Item selection and cycle next/prev
 ✔ Keyboard Navigation: Toggle read status with key shortcut helper
+✔ Keyboard Navigation: Arrow navigation helper calculates correct indices
 ✔ Store: Initial state and view selection
 ✔ Store: Items management and filtering by view
 ✔ Store: Read/Unread tracking and unread counts
@@ -112,7 +124,7 @@ The codebase was constructed using strict Test-Driven Development (TDD). The tes
 ✔ FeedFetcher: fetches, parses and caches feed successfully
 ✔ FeedFetcher: handles HTTP errors gracefully
 
-32 tests passed (0 failures)
+35 tests passed (0 failures)
 ```
 
 ---

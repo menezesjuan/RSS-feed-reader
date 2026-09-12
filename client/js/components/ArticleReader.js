@@ -1,4 +1,5 @@
 import { CATEGORY_COLORS } from './Sidebar.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 export function createArticleReader(store) {
   const overlay = document.createElement('div');
@@ -28,15 +29,22 @@ export function createArticleReader(store) {
     const isBookmarked = store.isBookmarked(item.id);
     const catColor = CATEGORY_COLORS[item.category] || '#2563eb';
 
+    const safeTitle = escapeHtml(item.title);
+    const safeCategory = escapeHtml(item.category);
+    const safeFeedTitle = escapeHtml(item.feedTitle);
+    const safeRelativeTime = escapeHtml(item.relativeTime);
+    const safeAuthor = escapeHtml(item.author || 'Editorial');
+    const safeLink = escapeHtml(item.link || '#');
+
     overlay.innerHTML = `
       <div class="w-full max-w-2xl bg-[var(--color-surface)] h-full shadow-2xl flex flex-col border-l border-[var(--color-border)] animate-in slide-in-from-right duration-200">
         <!-- Top Reader Bar -->
         <div class="h-14 px-6 border-b border-[var(--color-border)] flex items-center justify-between shrink-0 bg-[var(--color-surface)] select-none">
           <div class="flex items-center gap-2">
-            <button id="reader-prev" class="p-1.5 rounded text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] disabled:opacity-30 disabled:pointer-events-none" ${hasPrev ? '' : 'disabled'} title="Previous article (k)">
+            <button id="reader-prev" class="p-1.5 rounded text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] disabled:opacity-30 disabled:pointer-events-none" ${hasPrev ? '' : 'disabled'} title="Previous article (↑)">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             </button>
-            <button id="reader-next" class="p-1.5 rounded text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] disabled:opacity-30 disabled:pointer-events-none" ${hasNext ? '' : 'disabled'} title="Next article (j)">
+            <button id="reader-next" class="p-1.5 rounded text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] disabled:opacity-30 disabled:pointer-events-none" ${hasNext ? '' : 'disabled'} title="Next article (↓)">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </button>
           </div>
@@ -46,7 +54,7 @@ export function createArticleReader(store) {
               <svg class="w-4 h-4 ${isBookmarked ? 'fill-[var(--color-accent)] text-[var(--color-accent)]' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/></svg>
             </button>
 
-            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[var(--color-accent)] hover:bg-[var(--color-accent-subtle)] rounded-md transition-colors" title="Open in original site">
+            <a href="${safeLink}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[var(--color-accent)] hover:bg-[var(--color-accent-subtle)] rounded-md transition-colors" title="Open in original site">
               <span>Open original</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
@@ -62,19 +70,19 @@ export function createArticleReader(store) {
           <div class="space-y-3 pb-6 border-b border-[var(--color-border-subtle)]">
             <div class="flex items-center gap-2">
               <span class="px-2.5 py-0.5 text-xs font-semibold rounded-md" style="background-color: ${catColor}15; color: ${catColor}">
-                ${item.category}
+                ${safeCategory}
               </span>
               <span class="text-xs text-[var(--color-text-tertiary)]">·</span>
-              <span class="text-xs font-medium text-[var(--color-text-secondary)]">${item.feedTitle}</span>
-              <span class="text-xs text-[var(--color-text-tertiary)]">· ${item.relativeTime}</span>
+              <span class="text-xs font-medium text-[var(--color-text-secondary)]">${safeFeedTitle}</span>
+              <span class="text-xs text-[var(--color-text-tertiary)]">· ${safeRelativeTime}</span>
             </div>
 
             <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] leading-snug">
-              ${item.title}
+              ${safeTitle}
             </h1>
 
             <div class="text-xs text-[var(--color-text-tertiary)]">
-              By <span class="text-[var(--color-text-secondary)] font-medium">${item.author || 'Editorial'}</span>
+              By <span class="text-[var(--color-text-secondary)] font-medium">${safeAuthor}</span>
             </div>
           </div>
 
@@ -117,14 +125,20 @@ export function createArticleReader(store) {
 
     if (e.key === 'Escape') {
       store.setActiveArticle(null);
-    } else if (e.key === 'j') {
+    } else if (e.key === 'ArrowDown') {
       const items = store.getFilteredItems();
       const idx = items.findIndex(i => i.id === store.state.activeArticleId);
-      if (idx >= 0 && idx < items.length - 1) store.setActiveArticle(items[idx + 1].id);
-    } else if (e.key === 'k') {
+      if (idx >= 0 && idx < items.length - 1) {
+        e.preventDefault();
+        store.setActiveArticle(items[idx + 1].id);
+      }
+    } else if (e.key === 'ArrowUp') {
       const items = store.getFilteredItems();
       const idx = items.findIndex(i => i.id === store.state.activeArticleId);
-      if (idx > 0) store.setActiveArticle(items[idx - 1].id);
+      if (idx > 0) {
+        e.preventDefault();
+        store.setActiveArticle(items[idx - 1].id);
+      }
     } else if (e.key === 's') {
       store.toggleBookmark(store.state.activeArticleId);
     }

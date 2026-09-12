@@ -7,8 +7,8 @@
   --color-border-subtle: #eceef0;
 
   --color-text-primary: #1a1d21;
-  --color-text-secondary: #57606a;
-  --color-text-tertiary: #8b949e;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #6b7280;
 
   --color-accent: #2563eb;
   --color-accent-hover: #1d4ed8;
@@ -19,6 +19,7 @@
   --color-error: #dc2626;
 
   --color-unread-indicator: #2563eb;
+  --color-unread: var(--color-unread-indicator);
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-serif: 'Georgia', 'Charter', serif;
@@ -81,8 +82,8 @@
     --color-border-subtle: #21262d;
 
     --color-text-primary: #e6edf3;
-    --color-text-secondary: #8b949e;
-    --color-text-tertiary: #6e7681;
+    --color-text-secondary: #cbd5e1;
+    --color-text-tertiary: #9ca3af;
 
     --color-accent: #58a6ff;
     --color-accent-hover: #79c0ff;
@@ -93,6 +94,7 @@
     --color-error: #f85149;
 
     --color-unread-indicator: #58a6ff;
+    --color-unread: var(--color-unread-indicator);
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);

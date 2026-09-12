@@ -1,4 +1,5 @@
 import { CATEGORY_COLORS } from './Sidebar.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 export function createDigestView(store) {
   const container = document.createElement('section');
@@ -36,22 +37,22 @@ export function createDigestView(store) {
           </div>
         ` : `
           <!-- Lead Story Card -->
-          <article data-id="${topStory.id}" class="digest-item p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-xs hover:border-[var(--color-accent)] transition-all cursor-pointer space-y-3 group">
+          <article data-id="${escapeHtml(topStory.id)}" class="digest-item p-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-xs hover:border-[var(--color-accent)] transition-all cursor-pointer space-y-3 group">
             <div class="flex items-center gap-2">
               <span class="px-2 py-0.5 text-[11px] font-semibold rounded-md" style="background-color: ${CATEGORY_COLORS[topStory.category] || '#2563eb'}18; color: ${CATEGORY_COLORS[topStory.category] || '#2563eb'}">
-                ${topStory.category}
+                ${escapeHtml(topStory.category)}
               </span>
               <span class="text-xs text-[var(--color-text-tertiary)]">·</span>
-              <span class="text-xs font-medium text-[var(--color-text-secondary)]">${topStory.feedTitle}</span>
+              <span class="text-xs font-medium text-[var(--color-text-secondary)]">${escapeHtml(topStory.feedTitle)}</span>
               <span class="text-xs text-[var(--color-text-tertiary)]">· ~4 min read</span>
             </div>
 
             <h2 class="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors leading-snug">
-              ${topStory.title}
+              ${escapeHtml(topStory.title)}
             </h2>
 
             <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-              ${topStory.excerpt}
+              ${escapeHtml(topStory.excerpt)}
             </p>
 
             <div class="pt-2 flex items-center text-xs font-semibold text-[var(--color-accent)] gap-1">
@@ -65,23 +66,23 @@ export function createDigestView(store) {
             <h3 class="text-sm font-bold text-[var(--color-text-tertiary)] uppercase tracking-wider">Curated Highlights</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               ${highlightedStories.map(story => `
-                <article data-id="${story.id}" class="digest-item p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:shadow-xs hover:border-[var(--color-border-subtle)] transition-all cursor-pointer flex flex-col justify-between space-y-2 group">
+                <article data-id="${escapeHtml(story.id)}" class="digest-item p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:shadow-xs hover:border-[var(--color-border-subtle)] transition-all cursor-pointer flex flex-col justify-between space-y-2 group">
                   <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                       <span class="text-[11px] font-semibold" style="color: ${CATEGORY_COLORS[story.category] || '#2563eb'}">
-                        ${story.category}
+                        ${escapeHtml(story.category)}
                       </span>
-                      <span class="text-[11px] text-[var(--color-text-tertiary)]">· ${story.feedTitle}</span>
+                      <span class="text-[11px] text-[var(--color-text-tertiary)]">· ${escapeHtml(story.feedTitle)}</span>
                     </div>
                     <h4 class="text-sm font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-accent)] transition-colors line-clamp-2 leading-snug">
-                      ${story.title}
+                      ${escapeHtml(story.title)}
                     </h4>
                     <p class="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
-                      ${story.excerpt}
+                      ${escapeHtml(story.excerpt)}
                     </p>
                   </div>
                   <div class="text-[11px] text-[var(--color-text-tertiary)] pt-2">
-                    ${story.relativeTime}
+                    ${escapeHtml(story.relativeTime)}
                   </div>
                 </article>
               `).join('')}

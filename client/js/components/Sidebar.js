@@ -1,3 +1,5 @@
+import { escapeHtml } from '../utils/escapeHtml.js';
+
 /**
  * Category color mappings matching the design preview
  */
@@ -104,9 +106,9 @@ export function createSidebar(store) {
                   }">
                     <div class="flex items-center gap-2.5">
                       <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${dotColor}"></span>
-                      <span class="truncate">${cat.name}</span>
+                      <span class="truncate">${escapeHtml(cat.name)}</span>
                     </div>
-                    <span class="text-xs font-medium text-[var(--color-text-tertiary)]">${catUnread}</span>
+                    <span data-counter="${catView}" class="text-xs font-medium text-[var(--color-text-tertiary)]">${catUnread}</span>
                   </button>
 
                   <!-- Feeds in category -->
@@ -127,9 +129,9 @@ export function createSidebar(store) {
                             <span class="w-4 h-4 rounded flex items-center justify-center text-[10px] text-white font-bold shrink-0" style="background-color: ${avatarInfo.bg}">
                               ${avatarInfo.char}
                             </span>
-                            <span class="truncate">${feed.title}</span>
+                            <span class="truncate">${escapeHtml(feed.title)}</span>
                           </div>
-                          <span class="text-[11px] text-[var(--color-text-tertiary)] shrink-0 ml-1.5">${feedUnread}</span>
+                          <span data-counter="${feedView}" class="text-[11px] text-[var(--color-text-tertiary)] shrink-0 ml-1.5">${feedUnread}</span>
                         </button>
                       `;
                     }).join('')}
@@ -163,7 +165,28 @@ export function createSidebar(store) {
     });
   }
 
-  store.subscribe(() => render());
+  // Update counts surgically
+  function updateCountersDOM() {
+    const allCounter = aside.querySelector('[data-view="all"] span:last-child');
+    if (allCounter) allCounter.textContent = store.getUnreadCount('all');
+
+    const savedCounter = aside.querySelector('[data-view="saved"] span:last-child');
+    if (savedCounter) savedCounter.textContent = store.state.bookmarkedItemIds.size;
+
+    aside.querySelectorAll('[data-counter]').forEach(span => {
+      const view = span.dataset.counter;
+      span.textContent = store.getUnreadCount(view);
+    });
+  }
+
+  store.subscribe((state, mutation) => {
+    if (mutation && (mutation.type === 'ITEM_STATE_CHANGED' || mutation.type === 'ALL_READ_CHANGED')) {
+      updateCountersDOM();
+      return;
+    }
+    render();
+  });
+
   render();
 
   return aside;

@@ -55,11 +55,11 @@ export class Store {
     return () => this.listeners.delete(listener);
   }
 
-  notify() {
+  notify(mutation = { type: 'FULL_RELOAD' }) {
     this.saveToStorage();
     for (const listener of this.listeners) {
       try {
-        listener(this.state);
+        listener(this.state, mutation);
       } catch (err) {
         console.error('Store listener error:', err);
       }
@@ -68,45 +68,47 @@ export class Store {
 
   setCategories(categories) {
     this.state.categories = categories;
-    this.notify();
+    this.notify({ type: 'CATEGORIES_CHANGED' });
   }
 
   setItems(items) {
     this.state.items = items;
-    this.notify();
+    this.notify({ type: 'ITEMS_CHANGED' });
   }
 
   selectView(view) {
     this.state.selectedView = view;
-    this.notify();
+    this.notify({ type: 'VIEW_CHANGED', view });
   }
 
   setActiveTab(tab) {
     this.state.activeTab = tab;
-    this.notify();
+    this.notify({ type: 'TAB_CHANGED', tab });
   }
 
   setLayout(layout) {
     this.state.layout = layout;
-    this.notify();
+    this.notify({ type: 'LAYOUT_CHANGED', layout });
   }
 
   setSearchQuery(query) {
     this.state.searchQuery = (query || '').trim().toLowerCase();
-    this.notify();
+    this.notify({ type: 'SEARCH_CHANGED', query });
   }
 
   setSortBy(sortBy) {
     this.state.sortBy = sortBy;
-    this.notify();
+    this.notify({ type: 'SORT_CHANGED', sortBy });
   }
 
   setActiveArticle(id) {
+    const prevId = this.state.activeArticleId;
     this.state.activeArticleId = id;
-    if (id) {
-      this.markAsRead(id);
+    if (id && !this.state.readItemIds.has(id)) {
+      this.state.readItemIds.add(id);
+      this.notify({ type: 'ITEM_STATE_CHANGED', itemId: id, isRead: true });
     }
-    this.notify();
+    this.notify({ type: 'ACTIVE_ARTICLE_CHANGED', id, prevId });
   }
 
   isRead(itemId) {
@@ -116,14 +118,14 @@ export class Store {
   markAsRead(itemId) {
     if (!this.state.readItemIds.has(itemId)) {
       this.state.readItemIds.add(itemId);
-      this.notify();
+      this.notify({ type: 'ITEM_STATE_CHANGED', itemId, isRead: true });
     }
   }
 
   markAsUnread(itemId) {
     if (this.state.readItemIds.has(itemId)) {
       this.state.readItemIds.delete(itemId);
-      this.notify();
+      this.notify({ type: 'ITEM_STATE_CHANGED', itemId, isRead: false });
     }
   }
 
@@ -132,7 +134,7 @@ export class Store {
     for (const item of itemsToMark) {
       this.state.readItemIds.add(item.id);
     }
-    this.notify();
+    this.notify({ type: 'ALL_READ_CHANGED', filter });
   }
 
   isBookmarked(itemId) {
@@ -140,12 +142,14 @@ export class Store {
   }
 
   toggleBookmark(itemId) {
+    let isBookmarked = false;
     if (this.state.bookmarkedItemIds.has(itemId)) {
       this.state.bookmarkedItemIds.delete(itemId);
     } else {
       this.state.bookmarkedItemIds.add(itemId);
+      isBookmarked = true;
     }
-    this.notify();
+    this.notify({ type: 'ITEM_STATE_CHANGED', itemId, isBookmarked });
   }
 
   getItemsForView(view = this.state.selectedView) {

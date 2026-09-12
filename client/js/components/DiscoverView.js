@@ -1,4 +1,5 @@
 import { CATEGORY_COLORS, FEED_AVATAR_COLORS } from './Sidebar.js';
+import { escapeHtml } from '../utils/escapeHtml.js';
 
 export function createDiscoverView(store) {
   const container = document.createElement('section');
@@ -35,12 +36,12 @@ export function createDiscoverView(store) {
         <!-- Filter tabs -->
         <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[var(--color-border-subtle)] text-xs font-medium">
           ${filterOptions.map(opt => `
-            <button data-cat="${opt}" class="discover-filter-btn px-3 py-1.5 rounded-md whitespace-nowrap transition-colors ${
+            <button data-cat="${escapeHtml(opt)}" class="discover-filter-btn px-3 py-1.5 rounded-md whitespace-nowrap transition-colors ${
               selectedCategoryFilter === opt
                 ? 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] font-bold'
                 : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]'
             }">
-              ${opt}
+              ${escapeHtml(opt)}
             </button>
           `).join('')}
         </div>
@@ -51,13 +52,18 @@ export function createDiscoverView(store) {
             <div class="space-y-3">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${CATEGORY_COLORS[cat.name] || '#2563eb'}"></span>
-                <h3 class="text-base font-bold text-[var(--color-text-primary)]">${cat.name}</h3>
+                <h3 class="text-base font-bold text-[var(--color-text-primary)]">${escapeHtml(cat.name)}</h3>
                 <span class="text-xs text-[var(--color-text-tertiary)]">(${cat.feeds ? cat.feeds.length : 0} sources)</span>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 ${(cat.feeds || []).map(feed => {
-                  const avatar = FEED_AVATAR_COLORS[feed.title] || { bg: '#2563eb', char: feed.title.charAt(0) };
+                  const avatar = FEED_AVATAR_COLORS[feed.title] || { bg: '#2563eb', char: (feed.title || 'F').charAt(0) };
+                  const safeTitle = escapeHtml(feed.title);
+                  const safeDesc = escapeHtml(feed.description || 'Quality publications and technical essays.');
+                  const safeFormat = escapeHtml(feed.format || 'RSS');
+                  const safeSiteUrl = escapeHtml(feed.siteUrl || '#');
+
                   return `
                     <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex items-start justify-between gap-3 hover:border-[var(--color-border-subtle)] hover:shadow-xs transition-all">
                       <div class="flex items-start gap-3">
@@ -65,15 +71,15 @@ export function createDiscoverView(store) {
                           ${avatar.char}
                         </span>
                         <div class="space-y-1">
-                          <h4 class="text-sm font-bold text-[var(--color-text-primary)]">${feed.title}</h4>
+                          <h4 class="text-sm font-bold text-[var(--color-text-primary)]">${safeTitle}</h4>
                           <p class="text-xs text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
-                            ${feed.description || 'Quality publications and technical essays.'}
+                            ${safeDesc}
                           </p>
                           <div class="flex items-center gap-2 pt-1">
                             <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[var(--color-bg-tertiary)] text-[var(--color-text-tertiary)]">
-                              ${feed.format || 'RSS'}
+                              ${safeFormat}
                             </span>
-                            <a href="${feed.siteUrl || '#'}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-[var(--color-accent)] hover:underline truncate max-w-40">
+                            <a href="${safeSiteUrl}" target="_blank" rel="noopener noreferrer" class="text-[11px] text-[var(--color-accent)] hover:underline truncate max-w-40">
                               Visit site
                             </a>
                           </div>
