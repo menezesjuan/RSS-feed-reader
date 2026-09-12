@@ -6,6 +6,12 @@ export function createFeedList(store) {
   container.className = 'flex-1 h-[calc(100vh-3.75rem)] overflow-y-auto bg-[var(--color-bg-primary)]';
 
   function render() {
+    if (store.state.activeTab !== 'feed') {
+      container.classList.add('hidden');
+      return;
+    }
+    container.classList.remove('hidden');
+
     const selected = store.state.selectedView;
     const items = store.getFilteredItems();
     const layout = store.state.layout;

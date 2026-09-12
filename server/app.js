@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FeedFetcher } from './services/feedFetcher.js';
 import { CacheService } from './services/cacheService.js';
+import { parseOpml, exportOpml } from './parser/opmlParser.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -87,6 +88,37 @@ export function createApp(options = {}) {
         valid: false,
         error: err.message
       });
+    }
+  });
+
+  // OPML Import
+  app.post('/api/opml/import', (req, res) => {
+    const { opml } = req.body || {};
+    if (!opml || typeof opml !== 'string') {
+      return res.status(400).json({ success: false, error: 'Missing or invalid opml content' });
+    }
+
+    try {
+      const result = parseOpml(opml);
+      res.json({ success: true, ...result });
+    } catch (err) {
+      res.status(422).json({ success: false, error: err.message });
+    }
+  });
+
+  // OPML Export
+  app.get('/api/opml/export', (req, res) => {
+    try {
+      const sampleFeedsPath = path.join(rootDir, 'data', 'sample-feeds.json');
+      const raw = fs.readFileSync(sampleFeedsPath, 'utf-8');
+      const data = JSON.parse(raw);
+      const xml = exportOpml(data.categories || [], 'Frontpage Subscriptions');
+
+      res.setHeader('Content-Type', 'text/xml; charset=utf-8');
+      res.setHeader('Content-Disposition', 'attachment; filename="frontpage-feeds.opml"');
+      res.send(xml);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to export OPML', details: err.message });
     }
   });
 

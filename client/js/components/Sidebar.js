@@ -141,12 +141,17 @@ export function createSidebar(store) {
         </div>
       </div>
 
-      <!-- Health status footer -->
-      <div class="p-3 border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] flex items-center gap-2 text-xs font-medium text-[var(--color-success)]">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <span>All feeds healthy</span>
+      <!-- Health status footer with OPML export -->
+      <div class="p-3 border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] flex items-center justify-between text-xs">
+        <div class="flex items-center gap-1.5 font-medium text-[var(--color-success)]">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="truncate">All feeds healthy</span>
+        </div>
+        <a href="/api/opml/export" download="frontpage-feeds.opml" class="text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] font-medium text-[11px] px-1.5 py-0.5 rounded hover:bg-[var(--color-bg-tertiary)] shrink-0 transition-colors" title="Export OPML">
+          Export
+        </a>
       </div>
     `;
 

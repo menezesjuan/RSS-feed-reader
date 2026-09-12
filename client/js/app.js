@@ -2,6 +2,8 @@ import { Store } from './store.js';
 import { createHeader } from './components/Header.js';
 import { createSidebar } from './components/Sidebar.js';
 import { createFeedList } from './components/FeedList.js';
+import { createDigestView } from './components/DigestView.js';
+import { createDiscoverView } from './components/DiscoverView.js';
 import { createArticleReader } from './components/ArticleReader.js';
 import { createAddFeedModal } from './components/AddFeedModal.js';
 import { generateCuratedDashboardItems } from './seedData.js';
@@ -16,6 +18,8 @@ async function initApp() {
   const header = createHeader(store);
   const sidebar = createSidebar(store);
   const feedList = createFeedList(store);
+  const digestView = createDigestView(store);
+  const discoverView = createDiscoverView(store);
   const articleReader = createArticleReader(store);
   const addFeedModal = createAddFeedModal(store);
 
@@ -23,6 +27,8 @@ async function initApp() {
   mainLayout.className = 'flex flex-1 overflow-hidden relative';
   mainLayout.appendChild(sidebar);
   mainLayout.appendChild(feedList);
+  mainLayout.appendChild(digestView);
+  mainLayout.appendChild(discoverView);
 
   root.appendChild(header);
   root.appendChild(mainLayout);
