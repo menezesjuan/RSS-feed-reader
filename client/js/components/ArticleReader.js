@@ -1,5 +1,6 @@
 import { CATEGORY_COLORS } from './Sidebar.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
+import { sanitizeUrl } from '../utils/sanitizeUrl.js';
 
 export function createArticleReader(store) {
   const overlay = document.createElement('div');
@@ -34,7 +35,7 @@ export function createArticleReader(store) {
     const safeFeedTitle = escapeHtml(item.feedTitle);
     const safeRelativeTime = escapeHtml(item.relativeTime);
     const safeAuthor = escapeHtml(item.author || 'Editorial');
-    const safeLink = escapeHtml(item.link || '#');
+    const safeLink = escapeHtml(sanitizeUrl(item.link || '#'));
 
     overlay.innerHTML = `
       <div class="w-full max-w-2xl bg-[var(--color-surface)] h-full shadow-2xl flex flex-col border-l border-[var(--color-border)] animate-in slide-in-from-right duration-200">

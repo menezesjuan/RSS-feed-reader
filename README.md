@@ -69,6 +69,12 @@ The application delivers an instant **Guest Experience** pre-seeded with 19 cura
    - Calibrated text contrast (`--color-text-tertiary: #6b7280` on light mode, `#9ca3af` on dark mode) ensuring strict WCAG AA standard compliance (>= 4.5:1).
    - Dynamic CSS variable linkage with `--color-unread-indicator`.
 
+9. **Multi-Layered Security Hardening:**
+   - **SSRF Defense Engine (`ssrfProtection.js`):** Enforces strict protocol validation (`http:`, `https:`) and blocks all private/internal subnets (RFC 1918), loopback addresses (`127.0.0.0/8`, `::1`), link-local/cloud metadata services (`169.254.169.254`), and local domains (`.localhost`, `.local`, `.internal`).
+   - **Link Pseudo-Protocol Sanitization (`sanitizeUrl.js`):** Neutralizes `javascript:`, `data:`, `vbscript:`, and other executable schemes in external article and publication links.
+   - **HTTP Security Headers:** Express server configured with `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, and `Referrer-Policy: strict-origin-when-cross-origin`.
+   - **Stream Size & DoS Protection:** Caps remote feed downloads at 5MB and limits incoming JSON request bodies to 2MB.
+
 ---
 
 ## Design Decisions
@@ -85,7 +91,7 @@ Rather than presenting users with a login wall or an empty state, visitors enter
 
 ## Automated Test Suite (TDD)
 
-The codebase was constructed using strict Test-Driven Development (TDD). The test suite includes 35 automated tests covering parser resilience, date normalization, cache TTL, API route handling, escaping utilities, and keyboard navigation:
+The codebase was constructed using strict Test-Driven Development (TDD). The test suite includes 47 automated tests covering parser resilience, date normalization, cache TTL, API route handling, escaping utilities, keyboard navigation, SSRF defense, and URL sanitization:
 
 ```text
 ✔ API Routes: GET /api/health returns status ok
@@ -93,11 +99,16 @@ The codebase was constructed using strict Test-Driven Development (TDD). The tes
 ✔ API Routes: POST /api/feeds/validate validates empty or invalid URLs
 ✔ API Routes: POST /api/opml/import parses OPML and returns feed list
 ✔ API Routes: GET /api/opml/export serves downloadable OPML file
+✔ API Routes: Sets standard HTTP security headers
+✔ API Routes: POST /api/feeds/validate blocks SSRF target URLs
 ✔ escapeHtml: Escapes &, <, >, ", and ' characters correctly
 ✔ escapeHtml: Handles null, undefined and numbers gracefully
 ✔ Keyboard Navigation: Item selection and cycle next/prev
 ✔ Keyboard Navigation: Toggle read status with key shortcut helper
 ✔ Keyboard Navigation: Arrow navigation helper calculates correct indices
+✔ sanitizeUrl: Neutralizes javascript: and dangerous pseudo-protocols
+✔ sanitizeUrl: Neutralizes null, undefined, objects and empty values
+✔ sanitizeUrl: Preserves safe HTTP, HTTPS and relative links
 ✔ Store: Initial state and view selection
 ✔ Store: Items management and filtering by view
 ✔ Store: Read/Unread tracking and unread counts
@@ -123,8 +134,15 @@ The codebase was constructed using strict Test-Driven Development (TDD). The tes
 ✔ CacheService: clear and delete functionality
 ✔ FeedFetcher: fetches, parses and caches feed successfully
 ✔ FeedFetcher: handles HTTP errors gracefully
+✔ FeedFetcher: blocks private and loopback URLs (SSRF protection)
+✔ FeedFetcher: rejects feeds exceeding maximum size limit
+✔ SSRF Protection: Rejects invalid or unsupported protocols
+✔ SSRF Protection: Rejects localhost and private/internal domain names
+✔ SSRF Protection: Rejects loopback, private and cloud metadata IPv4 addresses
+✔ SSRF Protection: Rejects IPv6 loopback and private addresses
+✔ SSRF Protection: Allows safe public HTTP/HTTPS URLs
 
-35 tests passed (0 failures)
+47 tests passed (0 failures)
 ```
 
 ---

@@ -51,10 +51,10 @@ export function createHeader(store) {
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       </button>
 
-      <!-- User avatar -->
-      <div class="w-7 h-7 rounded-full bg-purple-600 text-white text-xs font-semibold flex items-center justify-center shadow-sm cursor-pointer hover:ring-2 hover:ring-purple-300" title="Guest Session (MS)">
+      <!-- User avatar button -->
+      <button id="user-avatar-btn" type="button" class="w-7 h-7 rounded-full bg-purple-600 text-white text-xs font-semibold flex items-center justify-center shadow-sm cursor-pointer hover:ring-2 hover:ring-purple-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" title="Guest Session (MS)" aria-label="Open account details">
         MS
-      </div>
+      </button>
     </div>
   `;
 

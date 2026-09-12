@@ -55,30 +55,22 @@ async function initApp() {
 
   // Initial Data Fetch with graceful fallback (Node API -> local sample-feeds.json mock)
   try {
-    let res = await fetch('./api/feeds/sample');
-    if (!res.ok) {
-      res = await fetch('/api/feeds/sample');
-    }
-    if (res.ok) {
-      const data = await res.json();
-      store.setCategories(data.categories || []);
+    const res = await fetch('./api/feeds/sample').catch(() => null);
+    let data = null;
+    if (res?.ok) {
+      data = await res.json().catch(() => null);
     } else {
-      throw new Error(`API endpoint responded with status ${res.status}`);
+      const fallbackRes = await fetch('../data/sample-feeds.json').catch(() => null)
+        || await fetch('./data/sample-feeds.json').catch(() => null);
+      if (fallbackRes?.ok) {
+        data = await fallbackRes.json().catch(() => null);
+      }
+    }
+    if (data?.categories) {
+      store.setCategories(data.categories);
     }
   } catch (err) {
-    console.warn('API route not available, falling back to static sample-feeds.json:', err);
-    try {
-      let fallbackRes = await fetch('../data/sample-feeds.json');
-      if (!fallbackRes.ok) {
-        fallbackRes = await fetch('./data/sample-feeds.json');
-      }
-      if (fallbackRes.ok) {
-        const data = await fallbackRes.json();
-        store.setCategories(data.categories || []);
-      }
-    } catch (fallbackErr) {
-      console.warn('Failed to load sample feeds from static fallback:', fallbackErr);
-    }
+    console.warn('Using local fallback categories:', err);
   }
 
   // Populate guest items

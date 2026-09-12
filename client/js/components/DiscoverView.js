@@ -1,5 +1,6 @@
 import { CATEGORY_COLORS, FEED_AVATAR_COLORS } from './Sidebar.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
+import { sanitizeUrl } from '../utils/sanitizeUrl.js';
 
 export function createDiscoverView(store) {
   const container = document.createElement('section');
@@ -15,14 +16,12 @@ export function createDiscoverView(store) {
     }
     container.classList.remove('hidden');
 
-    const categories = store.state.categories || [];
+    const categories = store.state.categories;
     const filterOptions = ['All', ...categories.map(c => c.name)];
 
-    // Filter feeds
-    let displayedCategories = categories;
-    if (selectedCategoryFilter !== 'All') {
-      displayedCategories = categories.filter(c => c.name === selectedCategoryFilter);
-    }
+    const displayedCategories = selectedCategoryFilter === 'All'
+      ? categories
+      : categories.filter(c => c.name === selectedCategoryFilter);
 
     container.innerHTML = `
       <div class="max-w-[var(--container-feed)] mx-auto px-4 sm:px-8 py-8 space-y-8">
@@ -62,7 +61,7 @@ export function createDiscoverView(store) {
                   const safeTitle = escapeHtml(feed.title);
                   const safeDesc = escapeHtml(feed.description || 'Quality publications and technical essays.');
                   const safeFormat = escapeHtml(feed.format || 'RSS');
-                  const safeSiteUrl = escapeHtml(feed.siteUrl || '#');
+                  const safeSiteUrl = escapeHtml(sanitizeUrl(feed.siteUrl || '#'));
 
                   return `
                     <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] flex items-start justify-between gap-3 hover:border-[var(--color-border-subtle)] hover:shadow-xs transition-all">

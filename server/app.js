@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { FeedFetcher } from './services/feedFetcher.js';
 import { CacheService } from './services/cacheService.js';
 import { parseOpml, exportOpml } from './parser/opmlParser.js';
+import { isSafePublicUrl } from './services/ssrfProtection.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +21,16 @@ export function createApp(options = {}) {
   const cache = options.cache || new CacheService();
   const fetcher = options.fetcher || new FeedFetcher({ cache });
 
-  app.use(express.json());
+  // Standard HTTP Security Headers
+  app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+  });
+
+  // Body parser with 2MB payload cap to prevent memory exhaustion DoS
+  app.use(express.json({ limit: '2mb' }));
 
   // Static files will be served from 'client' and 'data' folders
   app.use(express.static(path.join(rootDir, 'client')));
@@ -55,6 +65,10 @@ export function createApp(options = {}) {
       return res.status(400).json({ error: 'Missing feed url parameter' });
     }
 
+    if (!isSafePublicUrl(url)) {
+      return res.status(400).json({ success: false, error: 'Feed URL is invalid or restricted (SSRF protection)' });
+    }
+
     try {
       const feed = await fetcher.fetch(url, {
         category,
@@ -72,6 +86,10 @@ export function createApp(options = {}) {
 
     if (!url || typeof url !== 'string' || !url.trim()) {
       return res.status(400).json({ valid: false, error: 'URL must not be empty' });
+    }
+
+    if (!isSafePublicUrl(url.trim())) {
+      return res.status(400).json({ valid: false, error: 'URL is invalid or restricted (SSRF protection)' });
     }
 
     try {

@@ -72,3 +72,37 @@ test('FeedFetcher: handles HTTP errors gracefully', async (t) => {
     await fetcher.fetch('https://broken.com/feed.xml');
   }, /HTTP 404: Not Found/);
 });
+
+test('FeedFetcher: blocks private and loopback URLs (SSRF protection)', async () => {
+  const fetcher = new FeedFetcher();
+
+  await assert.rejects(async () => {
+    await fetcher.fetch('http://localhost:3000/feed');
+  }, /SSRF protection/);
+
+  await assert.rejects(async () => {
+    await fetcher.fetch('http://169.254.169.254/metadata');
+  }, /SSRF protection/);
+
+  await assert.rejects(async () => {
+    await fetcher.fetch('file:///etc/passwd');
+  }, /SSRF protection/);
+});
+
+test('FeedFetcher: rejects feeds exceeding maximum size limit', async (t) => {
+  const fetcher = new FeedFetcher();
+  const originalFetch = globalThis.fetch;
+  t.after(() => { globalThis.fetch = originalFetch; });
+
+  globalThis.fetch = async () => ({
+    ok: true,
+    status: 200,
+    headers: new Headers({ 'content-length': '10485760' }), // 10MB
+    text: async () => 'huge'
+  });
+
+  await assert.rejects(async () => {
+    await fetcher.fetch('https://example.com/huge-feed.xml', { maxSizeBytes: 1024 * 1024 });
+  }, /Feed exceeds maximum allowable size/);
+});
+

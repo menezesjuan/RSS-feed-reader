@@ -114,11 +114,13 @@ export function createFeedList(store) {
                           ${avatarInfo.char}
                         </span>
                         <span class="text-xs text-[var(--color-text-secondary)] font-medium shrink-0">${safeFeedTitle}</span>
-                        <span class="text-sm font-medium text-[var(--color-text-primary)] truncate group-hover:text-[var(--color-accent)]">${safeTitle}</span>
+                        <button type="button" data-action="open-article" data-id="${safeId}" class="feed-open text-sm font-medium text-[var(--color-text-primary)] truncate group-hover:text-[var(--color-accent)] text-left focus:outline-none focus:underline cursor-pointer">
+                          ${safeTitle}
+                        </button>
                       </div>
                       <div class="flex items-center gap-3 shrink-0 ml-4">
                         <span class="text-xs text-[var(--color-text-tertiary)]">${safeTime}</span>
-                        <button data-action="toggle-bookmark" data-id="${safeId}" class="p-1 rounded text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)]" title="Bookmark">
+                        <button data-action="toggle-bookmark" data-id="${safeId}" class="p-1 rounded text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)] cursor-pointer" title="Bookmark">
                           <svg class="w-3.5 h-3.5 ${isBookmarked ? 'fill-[var(--color-accent)] text-[var(--color-accent)]' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/></svg>
                         </button>
                       </div>
@@ -139,11 +141,15 @@ export function createFeedList(store) {
                             <span class="text-xs text-[var(--color-text-secondary)] font-medium">${safeFeedTitle}</span>
                             <span class="text-xs text-[var(--color-text-tertiary)]">· ${safeTime}</span>
                           </div>
-                          <button data-action="toggle-bookmark" data-id="${safeId}" class="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)]" title="Bookmark">
+                          <button data-action="toggle-bookmark" data-id="${safeId}" class="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)] cursor-pointer" title="Bookmark">
                             <svg class="w-3.5 h-3.5 ${isBookmarked ? 'fill-[var(--color-accent)] text-[var(--color-accent)]' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/></svg>
                           </button>
                         </div>
-                        <h2 class="text-base font-bold text-[var(--color-text-primary)] leading-snug group-hover:text-[var(--color-accent)]">${safeTitle}</h2>
+                        <h2 class="text-base font-bold text-[var(--color-text-primary)] leading-snug">
+                          <button type="button" data-action="open-article" data-id="${safeId}" class="feed-open text-left w-full group-hover:text-[var(--color-accent)] focus:outline-none focus:underline cursor-pointer transition-colors">
+                            ${safeTitle}
+                          </button>
+                        </h2>
                         <p class="text-xs text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">${safeExcerpt}</p>
                       </div>
                       <div class="pt-3 flex items-center justify-between">
@@ -174,17 +180,19 @@ export function createFeedList(store) {
                           <span class="text-xs text-[var(--color-text-tertiary)]">· ${safeTime}</span>
                         </div>
                         <div class="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 flex items-center gap-1 transition-opacity">
-                          <button data-action="toggle-read" data-id="${safeId}" class="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)]" title="${isRead ? 'Mark unread' : 'Mark read'}">
+                          <button data-action="toggle-read" data-id="${safeId}" class="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] cursor-pointer" title="${isRead ? 'Mark unread' : 'Mark read'}">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                           </button>
-                          <button data-action="toggle-bookmark" data-id="${safeId}" class="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)]" title="Bookmark">
+                          <button data-action="toggle-bookmark" data-id="${safeId}" class="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)] cursor-pointer" title="Bookmark">
                             <svg class="w-3.5 h-3.5 ${isBookmarked ? 'fill-[var(--color-accent)] text-[var(--color-accent)]' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16l-7-3.5L5 21V5z"/></svg>
                           </button>
                         </div>
                       </div>
 
-                      <h2 class="text-base sm:text-lg font-bold text-[var(--color-text-primary)] leading-snug tracking-tight group-hover:text-[var(--color-accent)] transition-colors">
-                        ${safeTitle}
+                      <h2 class="text-base sm:text-lg font-bold text-[var(--color-text-primary)] leading-snug tracking-tight">
+                        <button type="button" data-action="open-article" data-id="${safeId}" class="feed-open text-left w-full group-hover:text-[var(--color-accent)] focus:outline-none focus:underline cursor-pointer transition-colors">
+                          ${safeTitle}
+                        </button>
                       </h2>
 
                       <p class="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed line-clamp-2">
