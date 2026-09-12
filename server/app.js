@@ -22,8 +22,9 @@ export function createApp(options = {}) {
 
   app.use(express.json());
 
-  // Static files will be served from 'client' folder
+  // Static files will be served from 'client' and 'data' folders
   app.use(express.static(path.join(rootDir, 'client')));
+  app.use('/data', express.static(path.join(rootDir, 'data')));
 
   // Health check
   app.get('/api/health', (req, res) => {

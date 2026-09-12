@@ -53,15 +53,32 @@ async function initApp() {
     sidebar.classList.toggle('shadow-xl');
   });
 
-  // Initial Data Fetch
+  // Initial Data Fetch with graceful fallback (Node API -> local sample-feeds.json mock)
   try {
-    const res = await fetch('/api/feeds/sample');
+    let res = await fetch('./api/feeds/sample');
+    if (!res.ok) {
+      res = await fetch('/api/feeds/sample');
+    }
     if (res.ok) {
       const data = await res.json();
       store.setCategories(data.categories || []);
+    } else {
+      throw new Error(`API endpoint responded with status ${res.status}`);
     }
   } catch (err) {
-    console.warn('Using local fallback categories:', err);
+    console.warn('API route not available, falling back to static sample-feeds.json:', err);
+    try {
+      let fallbackRes = await fetch('../data/sample-feeds.json');
+      if (!fallbackRes.ok) {
+        fallbackRes = await fetch('./data/sample-feeds.json');
+      }
+      if (fallbackRes.ok) {
+        const data = await fallbackRes.json();
+        store.setCategories(data.categories || []);
+      }
+    } catch (fallbackErr) {
+      console.warn('Failed to load sample feeds from static fallback:', fallbackErr);
+    }
   }
 
   // Populate guest items

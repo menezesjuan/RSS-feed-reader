@@ -74,7 +74,6 @@
     --color-success: var(--color-success);
     --color-warning: var(--color-warning);
     --color-error: var(--color-error);
-    --color-unread: var(--color-unread-indicator);
     --radius-full: 9999rem;
     --container-content: 45rem;
     --container-feed: 60rem;
@@ -237,6 +236,9 @@
   }
   .relative {
     position: relative;
+  }
+  .static {
+    position: static;
   }
   .sticky {
     position: sticky;

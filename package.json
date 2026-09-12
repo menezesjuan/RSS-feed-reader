@@ -9,7 +9,8 @@
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
     "build:css": "npx @tailwindcss/cli -i ./client/css/input.css -o ./client/css/output.css",
-    "watch:css": "npx @tailwindcss/cli -i ./client/css/input.css -o ./client/css/output.css --watch"
+    "watch:css": "npx @tailwindcss/cli -i ./client/css/input.css -o ./client/css/output.css --watch",
+    "build": "npm run build:css"
   },
   "keywords": [
     "rss",
